@@ -31,7 +31,9 @@ function App({demo = false}: PropsType) {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(initializeAppTC())
+        if (!isInitialized) {
+            dispatch(initializeAppTC())
+        }
     }, [])
 
     const logoutHandler = useCallback(() => {
@@ -44,7 +46,7 @@ function App({demo = false}: PropsType) {
             <CircularProgress/>
         </div>
     }
-
+    console.log('11111')
     return (
         <BrowserRouter>
             <div className="App">
