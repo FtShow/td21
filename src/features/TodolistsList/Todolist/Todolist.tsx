@@ -7,7 +7,9 @@ import {Task} from './Task/Task'
 import {TaskStatuses, TaskType} from '../../../api/todolists-api'
 import {FilterValuesType, TodolistDomainType} from '../todolists-reducer'
 import {useDispatch} from 'react-redux'
-import {fetchTasksTC} from '../tasks-reducer'
+import {fetchTasksAction} from "../tasks-reducer";
+
+
 
 type PropsType = {
     todolist: TodolistDomainType
@@ -30,7 +32,7 @@ export const Todolist = React.memo(function ({demo = false, ...props}: PropsType
         if (demo) {
             return
         }
-        const thunk = fetchTasksTC(props.todolist.id)
+        const thunk = fetchTasksAction(props.todolist.id)
         dispatch(thunk)
     }, [])
 

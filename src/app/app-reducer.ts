@@ -38,8 +38,7 @@ export const setAppStatusAC = (status: RequestStatusType) => ({type: 'APP/SET-ST
 export const setAppInitializedAC = (value: boolean) => ({type: 'APP/SET-IS-INITIALIED', value} as const)
 
 export function* initializeAppSaga() {
-    alert('ASGA')
-    const res = yield call(authAPI.me)
+     const res = yield call(authAPI.me)
     if (res.data.resultCode === 0) {
         yield put(setIsLoggedInAC(true));
     } else {

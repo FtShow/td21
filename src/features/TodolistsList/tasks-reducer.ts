@@ -4,6 +4,7 @@ import {Dispatch} from 'redux'
 import {AppRootStateType} from '../../app/store'
 import {setAppErrorAC, SetAppErrorActionType, setAppStatusAC, SetAppStatusActionType} from '../../app/app-reducer'
 import {handleServerAppError, handleServerNetworkError} from '../../utils/error-utils'
+import {call, put} from "redux-saga/effects";
 
 const initialState: TasksStateType = {}
 
@@ -48,17 +49,26 @@ export const updateTaskAC = (taskId: string, model: UpdateDomainTaskModelType, t
     ({type: 'UPDATE-TASK', model, todolistId, taskId} as const)
 export const setTasksAC = (tasks: Array<TaskType>, todolistId: string) =>
     ({type: 'SET-TASKS', tasks, todolistId} as const)
+        //sagas
+export function* fetchTasks(action: ReturnType<typeof fetchTasksAction>)    {
+    debugger
+    yield put(setAppStatusAC('loading'))
+    const res = yield call(todolistsAPI.getTasks, action.todolistId)
 
-// thunks
-export const fetchTasksTC = (todolistId: string) => (dispatch: Dispatch<ActionsType | SetAppStatusActionType>) => {
-    dispatch(setAppStatusAC('loading'))
-    todolistsAPI.getTasks(todolistId)
-        .then((res) => {
             const tasks = res.data.items
-            dispatch(setTasksAC(tasks, todolistId))
-            dispatch(setAppStatusAC('succeeded'))
-        })
+            yield put(setTasksAC(tasks, action.todolistId))
+            yield put(setAppStatusAC('succeeded'))
+
 }
+export const fetchTasksAction = (todolistId: string)=>{
+    return {
+        type: 'TASK/FETCH-TASKS',
+        todolistId
+
+    }
+}
+// thunks
+
 export const removeTaskTC = (taskId: string, todolistId: string) => (dispatch: Dispatch<ActionsType>) => {
     todolistsAPI.deleteTask(todolistId, taskId)
         .then(res => {
