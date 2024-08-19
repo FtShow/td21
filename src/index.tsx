@@ -5,7 +5,8 @@ import * as serviceWorker from './serviceWorker';
 import App from './app/App';
 import {store} from './app/store';
 import {Provider} from 'react-redux';
-const rerenderEntireTree = () =>{
+
+const rerenderEntireTree = () => {
     ReactDOM.render(
         <Provider store={store}>
             <App/>

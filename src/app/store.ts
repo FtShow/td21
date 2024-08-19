@@ -5,8 +5,8 @@ import thunkMiddleware from 'redux-thunk'
 import {appReducer, initializeAppSaga} from './app-reducer'
 import {authReducer} from '../features/Login/auth-reducer'
 import createSagaMiddleware from 'redux-saga'
-import { put, takeEvery } from 'redux-saga/effects'
-import {useDispatch} from "react-redux";
+import {takeEvery} from 'redux-saga/effects'
+
 function * rootWatcher (){
     yield takeEvery('INITIALIED-APP', initializeAppSaga)
     yield takeEvery('TASK/FETCH-TASKS', fetchTasks)

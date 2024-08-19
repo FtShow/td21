@@ -10,7 +10,6 @@ import {useDispatch} from 'react-redux'
 import {fetchTasksAction} from "../tasks-reducer";
 
 
-
 type PropsType = {
     todolist: TodolistDomainType
     tasks: Array<TaskType>
