@@ -49,18 +49,19 @@ export const updateTaskAC = (taskId: string, model: UpdateDomainTaskModelType, t
     ({type: 'UPDATE-TASK', model, todolistId, taskId} as const)
 export const setTasksAC = (tasks: Array<TaskType>, todolistId: string) =>
     ({type: 'SET-TASKS', tasks, todolistId} as const)
-        //sagas
-export function* fetchTasks(action: ReturnType<typeof fetchTasksAction>)    {
+
+//sagas
+export function* fetchTasks(action: ReturnType<typeof fetchTasksAction>) {
     debugger
     yield put(setAppStatusAC('loading'))
     const res = yield call(todolistsAPI.getTasks, action.todolistId)
-
-            const tasks = res.data.items
-            yield put(setTasksAC(tasks, action.todolistId))
-            yield put(setAppStatusAC('succeeded'))
+    const tasks = res.data.items
+    yield put(setTasksAC(tasks, action.todolistId))
+    yield put(setAppStatusAC('succeeded'))
 
 }
-export const fetchTasksAction = (todolistId: string)=>{
+
+export const fetchTasksAction = (todolistId: string) => {
     return {
         type: 'TASK/FETCH-TASKS',
         todolistId
