@@ -1,10 +1,15 @@
-import {AddTodolistActionType, RemoveTodolistActionType, SetTodolistsActionType} from './todolists-reducer'
+import {
+    AddTodolistActionType,
+    RemoveTodolistActionType,
+    SetTodolistsActionType,
+    TodolistDomainType
+} from './todolists-reducer'
 import {TaskPriorities, TaskStatuses, TaskType, todolistsAPI, UpdateTaskModelType} from '../../api/todolists-api'
 import {Dispatch} from 'redux'
 import {AppRootStateType} from '../../app/store'
-import {setAppErrorAC, SetAppErrorActionType, setAppStatusAC, SetAppStatusActionType} from '../../app/app-reducer'
+import {SetAppErrorActionType, setAppStatusAC, SetAppStatusActionType} from '../../app/app-reducer'
 import {handleServerAppError, handleServerNetworkError} from '../../utils/error-utils'
-import {call, put} from "redux-saga/effects";
+import {removeTaskAC} from "./Todolist/tasks-sagas";
 
 const initialState: TasksStateType = {}
 
@@ -28,7 +33,7 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Actio
             return copyState
         case 'SET-TODOLISTS': {
             const copyState = {...state}
-            action.todolists.forEach(tl => {
+            action.todolists.forEach((tl) => {
                 copyState[tl.id] = []
             })
             return copyState
@@ -41,8 +46,7 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Actio
 }
 
 // actions
-export const removeTaskAC = (taskId: string, todolistId: string) =>
-    ({type: 'REMOVE-TASK', taskId, todolistId} as const)
+
 export const addTaskAC = (task: TaskType) =>
     ({type: 'ADD-TASK', task} as const)
 export const updateTaskAC = (taskId: string, model: UpdateDomainTaskModelType, todolistId: string) =>
@@ -51,32 +55,11 @@ export const setTasksAC = (tasks: Array<TaskType>, todolistId: string) =>
     ({type: 'SET-TASKS', tasks, todolistId} as const)
 
 //sagas
-export function* fetchTasks(action: ReturnType<typeof fetchTasksAction>) {
-    debugger
-    yield put(setAppStatusAC('loading'))
-    const res = yield call(todolistsAPI.getTasks, action.todolistId)
-    const tasks = res.data.items
-    yield put(setTasksAC(tasks, action.todolistId))
-    yield put(setAppStatusAC('succeeded'))
 
-}
 
-export const fetchTasksAction = (todolistId: string) => {
-    return {
-        type: 'TASK/FETCH-TASKS',
-        todolistId
-
-    }
-}
 // thunks
 
-export const removeTaskTC = (taskId: string, todolistId: string) => (dispatch: Dispatch<ActionsType>) => {
-    todolistsAPI.deleteTask(todolistId, taskId)
-        .then(res => {
-            const action = removeTaskAC(taskId, todolistId)
-            dispatch(action)
-        })
-}
+
 export const addTaskTC = (title: string, todolistId: string) => (dispatch: Dispatch<ActionsType | SetAppErrorActionType | SetAppStatusActionType>) => {
     dispatch(setAppStatusAC('loading'))
     todolistsAPI.createTask(todolistId, title)
