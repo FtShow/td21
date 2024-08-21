@@ -10,6 +10,8 @@ import {AppRootStateType} from '../../app/store'
 import {SetAppErrorActionType, setAppStatusAC, SetAppStatusActionType} from '../../app/app-reducer'
 import {handleServerAppError, handleServerNetworkError} from '../../utils/error-utils'
 import {removeTaskAC} from "./Todolist/tasks-sagas";
+import {call, put} from "redux-saga/effects";
+import {useDispatch} from "react-redux";
 
 const initialState: TasksStateType = {}
 
@@ -46,7 +48,7 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Actio
 }
 
 // actions
-
+const dispatch = useDispatch()
 export const addTaskAC = (task: TaskType) =>
     ({type: 'ADD-TASK', task} as const)
 export const updateTaskAC = (taskId: string, model: UpdateDomainTaskModelType, todolistId: string) =>
@@ -55,7 +57,25 @@ export const setTasksAC = (tasks: Array<TaskType>, todolistId: string) =>
     ({type: 'SET-TASKS', tasks, todolistId} as const)
 
 //sagas
+export function *addTaskSaga  (action: {todolistId: number, title: string} ){
+    put(setAppStatusAC('loading'))
+        try {
+            const res = yield call(todolistsAPI.createTask, action.todolistId, action.title )
+            if (res.data.resultCode === 0) {
+                const task = res.data.data.item
+                const action = addTaskAC(task)
+                put(action)
+                put(setAppStatusAC('succeeded'))
+            }
+            else {
+                handleServerAppError(res.data, dispatch);
+            }
+        }catch (error){
+            handleServerNetworkError(error, dispatch)
+        }
 
+
+}
 
 // thunks
 
