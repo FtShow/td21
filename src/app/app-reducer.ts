@@ -37,6 +37,7 @@ export const setAppInitializedAC = (value: boolean) => ({type: 'APP/SET-IS-INITI
 
 export function* initializeAppSaga() {
     const res = yield call(authAPI.me)
+    console.log(res)
     if (res.data.resultCode === 0) {
         yield put(setIsLoggedInAC(true));
     } else {

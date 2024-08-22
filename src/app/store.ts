@@ -1,4 +1,4 @@
-import { tasksReducer} from '../features/TodolistsList/tasks-reducer';
+import {addTaskSaga, tasksReducer} from '../features/TodolistsList/tasks-reducer';
 import {todolistsReducer} from '../features/TodolistsList/todolists-reducer';
 import {applyMiddleware, combineReducers, createStore} from 'redux'
 import thunkMiddleware from 'redux-thunk'
@@ -12,6 +12,7 @@ function * rootWatcher (){
     yield takeEvery('INITIALIED-APP', initializeAppSaga)
     yield takeEvery('TASK/FETCH-TASKS', fetchTasks)
     yield takeEvery('REMOVE-TASK', removeTaskSaga)
+    yield takeEvery('CREATE-TASK', addTaskSaga)
 }
 function * rootWorker (){
     alert()
