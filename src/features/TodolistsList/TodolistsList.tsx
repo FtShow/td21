@@ -17,7 +17,6 @@ import {AddItemForm} from '../../components/AddItemForm/AddItemForm'
 import {Todolist} from './Todolist/Todolist'
 import {Redirect} from 'react-router-dom'
 import {removeTaskAC} from "./Todolist/tasks-sagas";
-import {put} from "redux-saga/effects";
 
 type PropsType = {
     demo?: boolean

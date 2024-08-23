@@ -1,9 +1,4 @@
-import {
-    AddTodolistActionType,
-    RemoveTodolistActionType,
-    SetTodolistsActionType,
-    TodolistDomainType
-} from './todolists-reducer'
+import {AddTodolistActionType, RemoveTodolistActionType, SetTodolistsActionType} from './todolists-reducer'
 import {TaskPriorities, TaskStatuses, TaskType, todolistsAPI, UpdateTaskModelType} from '../../api/todolists-api'
 import {Dispatch} from 'redux'
 import {AppRootStateType} from '../../app/store'
@@ -11,7 +6,6 @@ import {SetAppErrorActionType, setAppStatusAC, SetAppStatusActionType} from '../
 import {handleServerAppError, handleServerNetworkError} from '../../utils/error-utils'
 import {removeTaskAC} from "./Todolist/tasks-sagas";
 import {call, put} from "redux-saga/effects";
-import {useDispatch} from "react-redux";
 
 const initialState: TasksStateType = {}
 
@@ -49,7 +43,7 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Actio
 
 // actions
 
-export const addTaskAC = ( task: TaskType) =>
+export const addTaskAC = (task: TaskType) =>
     ({type: 'ADD-TASK', task} as const)
 export const createTaskAC = (todoListId: string, title: string) =>
     ({type: 'CREATE-TASK', todoListId, title} as const)
@@ -65,8 +59,8 @@ export function* addTaskSaga(action: ReturnType<typeof createTaskAC>) {
     try {
         const res = yield call(todolistsAPI.createTask, action.todoListId, action.title);
         if (res.data.resultCode === 0) {
-           yield put(addTaskAC(res.data.data.item))
-           yield put(setAppStatusAC('succeeded'))
+            yield put(addTaskAC(res.data.data.item))
+            yield put(setAppStatusAC('succeeded'))
         }
     } catch (error) {
 
